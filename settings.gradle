@@ -1,0 +1,2 @@
+rootProject.name='Unofficial South Park'
+include ':app'
