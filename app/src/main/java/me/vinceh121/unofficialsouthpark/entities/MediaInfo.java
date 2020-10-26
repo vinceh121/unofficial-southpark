@@ -9,6 +9,7 @@ public class MediaInfo implements Serializable {
 	@JsonProperty("origination_date")
 	private String originationDate;
 	private List<Transcript> transcript;
+	private List<Rendition> rendition;
 
 	public String getOriginationDate() {
 		return originationDate;
@@ -24,6 +25,14 @@ public class MediaInfo implements Serializable {
 
 	public void setTranscript(List<Transcript> transcript) {
 		this.transcript = transcript;
+	}
+
+	public List<Rendition> getRendition() {
+		return rendition;
+	}
+
+	public void setRendition(List<Rendition> rendition) {
+		this.rendition = rendition;
 	}
 
 	public static class Rendition implements Serializable {

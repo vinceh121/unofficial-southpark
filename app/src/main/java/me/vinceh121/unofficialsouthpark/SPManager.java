@@ -1,5 +1,9 @@
 package me.vinceh121.unofficialsouthpark;
 
+import android.util.Log;
+
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.commons.codec.binary.Base64;
@@ -16,6 +20,7 @@ import java.util.List;
 
 import me.vinceh121.unofficialsouthpark.entities.Episode;
 import me.vinceh121.unofficialsouthpark.entities.Geolocation;
+import me.vinceh121.unofficialsouthpark.entities.MediaInfo;
 import me.vinceh121.unofficialsouthpark.entities.SPData;
 
 public class SPManager {
@@ -28,6 +33,7 @@ public class SPManager {
 
 	public SPManager() {
 		this(HttpClients.custom().setUserAgent(USER_AGENT).build(), new ObjectMapper());
+		this.mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 	}
 
 	public SPManager(final HttpClient client, final ObjectMapper mapper) {
@@ -44,6 +50,20 @@ public class SPManager {
 			}
 		});
 		this.setData(data);
+	}
+
+	public MediaInfo loadMediaInfo(final String mediaGenUrl) throws IOException {
+		final HttpGet jsonGet = new HttpGet(mediaGenUrl.replaceAll("\\{", "%7B").replaceAll("\\}", "%7D"));
+		final MediaInfo info = this.client.execute(jsonGet, new HttpClientResponseHandler<MediaInfo>() {
+			@Override
+			public MediaInfo handleResponse(ClassicHttpResponse response) throws HttpException, IOException {
+				final JsonNode node = mapper.readTree(response.getEntity().getContent());
+				final JsonNode nodeInfo = node.at("/package/video/item/0"); // TODO maybe have better control over tree traversal
+				Log.d("SPManager", "nodeInfo: " + nodeInfo);
+				return mapper.convertValue(nodeInfo, MediaInfo.class);
+			}
+		});
+		return info;
 	}
 
 	public SPData getData() {
