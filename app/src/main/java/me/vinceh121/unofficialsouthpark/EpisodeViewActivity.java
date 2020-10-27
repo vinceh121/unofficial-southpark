@@ -28,7 +28,7 @@ public class EpisodeViewActivity extends AppCompatActivity {
 	private Episode episode;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_episode_view);
 
@@ -45,7 +45,7 @@ public class EpisodeViewActivity extends AppCompatActivity {
 		final FloatingActionButton fab = findViewById(R.id.fab);
 		fab.setOnClickListener(new View.OnClickListener() {
 			@Override
-			public void onClick(View view) {
+			public void onClick(final View view) {
 				final LoadMediaInfoTask task = new LoadMediaInfoTask();
 				task.execute(SPManager.getStreams(episode).get(0));
 			}
@@ -55,18 +55,18 @@ public class EpisodeViewActivity extends AppCompatActivity {
 	private class LoadMediaInfoTask extends AsyncTask<String, Void, MediaInfo> {
 
 		@Override
-		protected MediaInfo doInBackground(String... strings) {
+		protected MediaInfo doInBackground(final String... strings) {
 			try {
 				final MediaInfo info = manager.loadMediaInfo(strings[0]);
 				return info;
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				e.printStackTrace();
 			}
 			return null;
 		}
 
 		@Override
-		protected void onPostExecute(MediaInfo mediaInfo) {
+		protected void onPostExecute(final MediaInfo mediaInfo) {
 			final Uri uri = Uri.parse(mediaInfo.getRendition().get(0).getSrc());
 			Log.d("EpisodeViewActivity", "URL for " + episode.getTitle() + " : " + uri);
 			/*final Intent launchIntent = getPackageManager().getLaunchIntentForPackage("org.videolan.vlc");

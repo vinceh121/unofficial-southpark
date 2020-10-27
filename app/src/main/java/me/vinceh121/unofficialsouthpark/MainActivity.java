@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
 	private TextView textProgress;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
 	private class LoadingTask extends AsyncTask<Geolocation, String, SPData> {
 
 		@Override
-		protected SPData doInBackground(Geolocation... geos) {
+		protected SPData doInBackground(final Geolocation... geos) {
 			final SPManager manager = new SPManager();
 			final Geolocation geo = geos[0];
 			try {
@@ -41,21 +41,21 @@ public class MainActivity extends AppCompatActivity {
 				manager.loadData(geo);
 				this.publishProgress("Loading succcess!");
 				return manager.getData();
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				e.printStackTrace();
 				return null;
 			}
 		}
 
 		@Override
-		protected void onPostExecute(SPData spData) {
+		protected void onPostExecute(final SPData spData) {
 			final Intent intent = new Intent(MainActivity.this, SeasonsActivity.class);
 			intent.putExtra("seasons", new ArrayList<>(spData.getSeasons()));
 			startActivity(intent);
 		}
 
 		@Override
-		protected void onProgressUpdate(String... values) {
+		protected void onProgressUpdate(final String... values) {
 			textProgress.setText(values[0]);
 		}
 	}

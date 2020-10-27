@@ -27,6 +27,7 @@ public class EpisodesActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_seasons);
 
+		@SuppressWarnings("unchecked")
 		final List<Episode> season = (List<Episode>) getIntent().getSerializableExtra("season");
 
 		this.recycler = this.findViewById(R.id.seasonList);

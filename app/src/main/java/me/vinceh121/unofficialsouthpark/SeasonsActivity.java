@@ -25,7 +25,7 @@ public class SeasonsActivity extends AppCompatActivity {
 	private RecyclerView.LayoutManager layoutManager;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_seasons);
 
@@ -40,10 +40,10 @@ public class SeasonsActivity extends AppCompatActivity {
 	}
 
 	private class SeasonAdapter extends RecyclerView.Adapter<SeasonAdapter.ViewHolder> {
-		private List<List<Episode>> seasonList;
+		private final List<List<Episode>> seasonList;
 
 		private class ViewHolder extends RecyclerView.ViewHolder {
-			private View v;
+			private final View v;
 
 			public ViewHolder(final View v) {
 				super(v);
@@ -57,11 +57,11 @@ public class SeasonsActivity extends AppCompatActivity {
 
 		@NonNull
 		@Override
-		public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+		public ViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, final int viewType) {
 			final View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_season_view, parent, false);
 			v.setOnClickListener(new View.OnClickListener() {
 				@Override
-				public void onClick(View v) {
+				public void onClick(final View v) {
 					final Intent intent = new Intent(SeasonsActivity.this, EpisodesActivity.class);
 					final List<Episode> s = seasonList.get(recycler.getChildLayoutPosition(v));
 					intent.putExtra("season", new ArrayList<>(s));
@@ -74,7 +74,7 @@ public class SeasonsActivity extends AppCompatActivity {
 		}
 
 		@Override
-		public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+		public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
 			final List<Episode> season = seasonList.get(position);
 
 			final TextView title = holder.v.findViewById(R.id.textTitle);
