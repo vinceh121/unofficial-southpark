@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -12,8 +13,10 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 
@@ -43,8 +46,6 @@ public class EpisodeViewActivity extends AppCompatActivity {
 		fab.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				//final AlertDialog dialog = new AlertDialog.Builder(getBaseContext()).setMessage("Loading episode...").create();
-				//dialog.show();
 				final LoadMediaInfoTask task = new LoadMediaInfoTask();
 				task.execute(SPManager.getStreams(episode).get(0));
 			}
@@ -66,11 +67,23 @@ public class EpisodeViewActivity extends AppCompatActivity {
 
 		@Override
 		protected void onPostExecute(MediaInfo mediaInfo) {
+			final Uri uri = Uri.parse(mediaInfo.getRendition().get(0).getSrc());
+			Log.d("EpisodeViewActivity", "URL for " + episode.getTitle() + " : " + uri);
+			/*final Intent launchIntent = getPackageManager().getLaunchIntentForPackage("org.videolan.vlc");
+			if (launchIntent != null) {
+				//if (false) {
+				launchIntent.setType("application/vnd.apple.mpegurl");
+				launchIntent.setData(uri);
+				launchIntent.putExtra(Intent.EXTRA_STREAM, uri);
+				startActivity(launchIntent);
+			} else {
+				Toast.makeText(EpisodeViewActivity.this.getBaseContext(), "Could not find VLC\nPerforming send", Toast.LENGTH_SHORT).show();*/
 			final Intent intent = new Intent(Intent.ACTION_SEND);
 			intent.setType("application/vnd.apple.mpegurl");
-			intent.putExtra(Intent.EXTRA_STREAM, Uri.parse(mediaInfo.getRendition().get(0).getSrc()));
+			intent.putExtra(Intent.EXTRA_STREAM, uri);
 			final Intent shareIntent = Intent.createChooser(intent, null);
 			startActivity(shareIntent);
+			//}
 		}
 	}
 }

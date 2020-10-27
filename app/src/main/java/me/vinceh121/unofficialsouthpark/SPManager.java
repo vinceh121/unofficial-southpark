@@ -34,6 +34,7 @@ public class SPManager {
 	public SPManager() {
 		this(HttpClients.custom().setUserAgent(USER_AGENT).build(), new ObjectMapper());
 		this.mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+		this.mapper.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
 	}
 
 	public SPManager(final HttpClient client, final ObjectMapper mapper) {
@@ -72,6 +73,14 @@ public class SPManager {
 
 	public void setData(SPData data) {
 		this.data = data;
+	}
+
+	public HttpClient getClient() {
+		return client;
+	}
+
+	public ObjectMapper getMapper() {
+		return mapper;
 	}
 
 	public static List<String> getStreams(final Episode ep) {
