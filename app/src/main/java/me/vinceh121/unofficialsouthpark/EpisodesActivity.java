@@ -10,9 +10,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -23,12 +27,14 @@ public class EpisodesActivity extends AppCompatActivity {
 	private RecyclerView.LayoutManager layoutManager;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_seasons);
 
-		@SuppressWarnings("unchecked")
-		final List<Episode> season = (List<Episode>) getIntent().getSerializableExtra("season");
+		final ActionBar toolbar = getSupportActionBar();
+		toolbar.setTitle("Season " + getIntent().getIntExtra("seasonNumber", -1));
+
+		@SuppressWarnings("unchecked") final List<Episode> season = (List<Episode>) getIntent().getSerializableExtra("season");
 
 		this.recycler = this.findViewById(R.id.seasonList);
 		this.layoutManager = new LinearLayoutManager(this);
@@ -39,10 +45,10 @@ public class EpisodesActivity extends AppCompatActivity {
 	}
 
 	private class EpisodeAdapter extends RecyclerView.Adapter<EpisodeAdapter.ViewHolder> {
-		private List<Episode> season;
+		private final List<Episode> season;
 
 		private class ViewHolder extends RecyclerView.ViewHolder {
-			private View v;
+			private final View v;
 
 			public ViewHolder(final View v) {
 				super(v);
@@ -56,11 +62,11 @@ public class EpisodesActivity extends AppCompatActivity {
 
 		@NonNull
 		@Override
-		public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+		public ViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, final int viewType) {
 			final View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_episode_view, parent, false);
 			v.setOnClickListener(new View.OnClickListener() {
 				@Override
-				public void onClick(View v) {
+				public void onClick(final View v) {
 					final Intent intent = new Intent(EpisodesActivity.this, EpisodeViewActivity.class);
 					final Episode s = season.get(recycler.getChildLayoutPosition(v));
 					intent.putExtra("episode", s);
@@ -73,17 +79,17 @@ public class EpisodesActivity extends AppCompatActivity {
 		}
 
 		@Override
-		public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+		public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
 			final Episode episode = season.get(position);
 
 			final TextView title = holder.v.findViewById(R.id.textTitle);
 			final TextView epCount = holder.v.findViewById(R.id.textEpDesc);
 			final ImageView img = holder.v.findViewById(R.id.imageEpisode);
 
-            title.setText(episode.getTitle());
-            epCount.setText(episode.getDetails());
-            img.setImageURI(Uri.parse(episode.getImage()));
-        }
+			title.setText(episode.getTitle());
+			epCount.setText(episode.getDetails());
+			Picasso.get().load(episode.getImage()).resize(768, 480).onlyScaleDown().into(img);
+		}
 
 		@Override
 		public int getItemCount() {

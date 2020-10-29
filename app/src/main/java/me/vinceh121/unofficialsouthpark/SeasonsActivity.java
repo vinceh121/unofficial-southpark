@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,8 +65,10 @@ public class SeasonsActivity extends AppCompatActivity {
 				@Override
 				public void onClick(final View v) {
 					final Intent intent = new Intent(SeasonsActivity.this, EpisodesActivity.class);
-					final List<Episode> s = seasonList.get(recycler.getChildLayoutPosition(v));
+					final int index = recycler.getChildLayoutPosition(v);
+					final List<Episode> s = seasonList.get(index);
 					intent.putExtra("season", new ArrayList<>(s));
+					intent.putExtra("seasonNumber", index + 1);
 					startActivity(intent);
 				}
 			});
@@ -83,7 +87,7 @@ public class SeasonsActivity extends AppCompatActivity {
 
 			title.setText("Season " + (position + 1));
 			epCount.setText(Integer.toString(season.size()));
-			img.setImageURI(Uri.parse(SPManager.getSeasonImage(position + 1)));
+			Picasso.get().load(SPManager.getSeasonImage(position + 1)).into(img);
 		}
 
 		@Override
