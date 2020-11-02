@@ -6,12 +6,16 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.android.exoplayer2.MediaItem;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.util.MimeTypes;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.preference.PreferenceManager;
 
 import android.util.Log;
 import android.view.View;
@@ -20,6 +24,7 @@ import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Vector;
 
 import me.vinceh121.unofficialsouthpark.entities.Episode;
 import me.vinceh121.unofficialsouthpark.entities.MediaInfo;
@@ -56,7 +61,7 @@ public class EpisodeViewActivity extends AbstractSPActivity {
 		});
 	}
 
-	private class LoadMediaInfoTask extends AsyncTask<String, Void, MediaInfo> {
+	private class LoadMediaInfoTask extends AsyncTask<String, Void, MediaInfo> { // todo make static
 
 		@Override
 		protected MediaInfo doInBackground(final String... strings) {
@@ -73,21 +78,19 @@ public class EpisodeViewActivity extends AbstractSPActivity {
 		protected void onPostExecute(final MediaInfo mediaInfo) {
 			final Uri uri = Uri.parse(mediaInfo.getRendition().get(0).getSrc());
 			Log.d("EpisodeViewActivity", "URL for " + episode.getTitle() + " : " + uri);
-			/*final Intent launchIntent = getPackageManager().getLaunchIntentForPackage("org.videolan.vlc");
-			if (launchIntent != null) {
-				//if (false) {
-				launchIntent.setType("application/vnd.apple.mpegurl");
-				launchIntent.setData(uri);
-				launchIntent.putExtra(Intent.EXTRA_STREAM, uri);
-				startActivity(launchIntent);
+			if (PreferenceManager.getDefaultSharedPreferences(EpisodeViewActivity.this).getBoolean("episode-send", false)) {
+				final Intent intent = new Intent(Intent.ACTION_SEND);
+				intent.setType("application/vnd.apple.mpegurl");
+				intent.putExtra(Intent.EXTRA_STREAM, uri);
+				final Intent shareIntent = Intent.createChooser(intent, null);
+				startActivity(shareIntent);
 			} else {
-				Toast.makeText(EpisodeViewActivity.this.getBaseContext(), "Could not find VLC\nPerforming send", Toast.LENGTH_SHORT).show();*/
-			final Intent intent = new Intent(Intent.ACTION_SEND);
-			intent.setType("application/vnd.apple.mpegurl");
-			intent.putExtra(Intent.EXTRA_STREAM, uri);
-			final Intent shareIntent = Intent.createChooser(intent, null);
-			startActivity(shareIntent);
-			//}
+				final Intent intent = new Intent(EpisodeViewActivity.this, PlayerActivity.class);
+				intent.putExtra("mediaInfo", mediaInfo);
+				startActivity(intent);
+			}
 		}
 	}
+
+
 }

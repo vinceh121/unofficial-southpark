@@ -10,5 +10,11 @@
 
     <SwitchPreferenceCompat
         app:key="episode-send"
-        app:title="Share episode links instead of opening them by default" />
+        app:summary="Share episode links instead of opening them with the internal player"
+        app:title="SEND episodes" />
+
+    <SwitchPreferenceCompat
+        app:key="subtitles"
+        app:summary="Only works with internal player"
+        app:title="Subtitles" />
 </PreferenceScreen>

@@ -91,6 +91,7 @@ public class MediaInfo implements Serializable {
 
 	public static class Transcript implements Serializable {
 		private String srclang, label, kind;
+		private List<Typographic> typographic;
 
 		public String getSrclang() {
 			return srclang;
@@ -114,6 +115,14 @@ public class MediaInfo implements Serializable {
 
 		public void setKind(String kind) {
 			this.kind = kind;
+		}
+
+		public List<Typographic> getTypographic() {
+			return typographic;
+		}
+
+		public void setTypographic(final List<Typographic> typographic) {
+			this.typographic = typographic;
 		}
 	}
 
