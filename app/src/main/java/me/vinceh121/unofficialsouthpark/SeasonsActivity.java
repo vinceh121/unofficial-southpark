@@ -21,7 +21,7 @@ import java.util.List;
 
 import me.vinceh121.unofficialsouthpark.entities.Episode;
 
-public class SeasonsActivity extends AppCompatActivity {
+public class SeasonsActivity extends AbstractSPActivity {
 	private List<List<Episode>> seasons;
 	private RecyclerView recycler;
 	private RecyclerView.LayoutManager layoutManager;
@@ -31,7 +31,8 @@ public class SeasonsActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_seasons);
 
-		this.seasons = (List<List<Episode>>) getIntent().getSerializableExtra("seasons");
+		//this.seasons = (List<List<Episode>>) getIntent().getSerializableExtra("seasons");
+		this.seasons = SPManager.getInstance().getData().getSeasons();
 
 		this.recycler = this.findViewById(R.id.seasonList);
 		this.layoutManager = new LinearLayoutManager(this);
@@ -67,8 +68,7 @@ public class SeasonsActivity extends AppCompatActivity {
 					final Intent intent = new Intent(SeasonsActivity.this, EpisodesActivity.class);
 					final int index = recycler.getChildLayoutPosition(v);
 					final List<Episode> s = seasonList.get(index);
-					intent.putExtra("season", new ArrayList<>(s));
-					intent.putExtra("seasonNumber", index + 1);
+					intent.putExtra("season", index);
 					startActivity(intent);
 				}
 			});

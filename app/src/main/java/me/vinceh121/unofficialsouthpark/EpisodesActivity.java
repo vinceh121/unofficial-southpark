@@ -22,7 +22,7 @@ import java.util.List;
 
 import me.vinceh121.unofficialsouthpark.entities.Episode;
 
-public class EpisodesActivity extends AppCompatActivity {
+public class EpisodesActivity extends AbstractSPActivity {
 	private RecyclerView recycler;
 	private RecyclerView.LayoutManager layoutManager;
 
@@ -31,10 +31,12 @@ public class EpisodesActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_seasons);
 
-		final ActionBar toolbar = getSupportActionBar();
-		toolbar.setTitle("Season " + getIntent().getIntExtra("seasonNumber", -1));
+		final int seasonIndex = getIntent().getIntExtra("season", -2);
 
-		@SuppressWarnings("unchecked") final List<Episode> season = (List<Episode>) getIntent().getSerializableExtra("season");
+		final ActionBar toolbar = getSupportActionBar();
+		toolbar.setTitle("Season " + (seasonIndex + 1));
+
+		final List<Episode> season = SPManager.getInstance().getData().getSeasons().get(seasonIndex);
 
 		this.recycler = this.findViewById(R.id.seasonList);
 		this.layoutManager = new LinearLayoutManager(this);

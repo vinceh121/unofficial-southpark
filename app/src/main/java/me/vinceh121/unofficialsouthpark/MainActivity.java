@@ -1,6 +1,7 @@
 package me.vinceh121.unofficialsouthpark;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 import me.vinceh121.unofficialsouthpark.entities.Geolocation;
 import me.vinceh121.unofficialsouthpark.entities.SPData;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AbstractSPActivity {
 	private TextView textProgress;
 
 	@Override
@@ -24,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
 		this.textProgress = findViewById(R.id.textProgress);
 
-		final Geolocation geo = Geolocation.valueOf(getSharedPreferences("southparkcontent", MODE_PRIVATE).getString("geolocation", "EN"));
+		final Geolocation geo = Geolocation.valueOf(PreferenceManager.getDefaultSharedPreferences(this).getString("geolocation", "EN"));
 
 		final LoadingTask task = new LoadingTask();
 		task.execute(geo);
@@ -34,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
 		@Override
 		protected SPData doInBackground(final Geolocation... geos) {
-			final SPManager manager = new SPManager();
+			final SPManager manager = SPManager.getInstance();
 			final Geolocation geo = geos[0];
 			try {
 				this.publishProgress("Loading geolocation " + geo.name());
@@ -50,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
 		@Override
 		protected void onPostExecute(final SPData spData) {
 			final Intent intent = new Intent(MainActivity.this, SeasonsActivity.class);
-			intent.putExtra("seasons", new ArrayList<>(spData.getSeasons()));
 			startActivity(intent);
 		}
 

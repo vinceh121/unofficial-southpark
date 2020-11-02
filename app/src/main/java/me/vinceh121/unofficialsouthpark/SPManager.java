@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.apache.hc.core5.http.HttpException;
@@ -27,7 +28,10 @@ public class SPManager {
 	public static final String DATA_URL = "https://raw.githubusercontent.com/wargio/plugin.video.southpark_unofficial/addon-data/addon-data-%s.json";
 	public static final String SEASON_THUMBNAIL_URL = "https://raw.githubusercontent.com/wargio/plugin.video.southpark_unofficial/master/imgs/%s.jpg";
 	public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; rv:25.0) Gecko/20100101 Firefox/25.0";
-	private final HttpClient client;
+
+	private static final SPManager instance = new SPManager();
+
+	private final CloseableHttpClient client;
 	private final ObjectMapper mapper;
 	private SPData data;
 
@@ -37,7 +41,7 @@ public class SPManager {
 		this.mapper.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
 	}
 
-	public SPManager(final HttpClient client, final ObjectMapper mapper) {
+	public SPManager(final CloseableHttpClient client, final ObjectMapper mapper) {
 		this.client = client;
 		this.mapper = mapper;
 	}
@@ -67,6 +71,10 @@ public class SPManager {
 		return info;
 	}
 
+	public void dispose() throws IOException {
+		this.client.close();
+	}
+
 	public SPData getData() {
 		return data;
 	}
@@ -94,5 +102,9 @@ public class SPManager {
 
 	public static String getSeasonImage(final int seasonNbr) {
 		return String.format(SEASON_THUMBNAIL_URL, Integer.toString(seasonNbr));
+	}
+
+	public static SPManager getInstance() {
+		return instance;
 	}
 }

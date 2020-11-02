@@ -1,0 +1,14 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ListPreference
+        app:defaultValue="EN"
+        app:entries="@array/geolocations"
+        app:entryValues="@array/geolocations"
+        app:key="geolocation"
+        app:title="Geolocation (needs restart)"
+        app:useSimpleSummaryProvider="true" />
+
+    <SwitchPreferenceCompat
+        app:key="episode-send"
+        app:title="Share episode links instead of opening them by default" />
+</PreferenceScreen>

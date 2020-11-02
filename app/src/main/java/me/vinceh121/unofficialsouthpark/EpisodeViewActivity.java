@@ -19,12 +19,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.util.List;
 
 import me.vinceh121.unofficialsouthpark.entities.Episode;
 import me.vinceh121.unofficialsouthpark.entities.MediaInfo;
 
-public class EpisodeViewActivity extends AppCompatActivity {
-	private SPManager manager;
+public class EpisodeViewActivity extends AbstractSPActivity {
 	private Episode episode;
 
 	@Override
@@ -32,7 +32,6 @@ public class EpisodeViewActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_episode_view);
 
-		this.manager = new SPManager();
 		this.episode = (Episode) getIntent().getSerializableExtra("episode");
 
 		final Toolbar toolbar = findViewById(R.id.toolbar);
@@ -47,7 +46,12 @@ public class EpisodeViewActivity extends AppCompatActivity {
 			@Override
 			public void onClick(final View view) {
 				final LoadMediaInfoTask task = new LoadMediaInfoTask();
-				task.execute(SPManager.getStreams(episode).get(0));
+				final List<String> streams = SPManager.getStreams(episode);
+				if (streams.size() == 0) {
+					Snackbar.make(fab, "This episode doesn't have any streams ;-;", Snackbar.LENGTH_LONG);
+					return;
+				}
+				task.execute(streams.get(0));
 			}
 		});
 	}
@@ -57,7 +61,7 @@ public class EpisodeViewActivity extends AppCompatActivity {
 		@Override
 		protected MediaInfo doInBackground(final String... strings) {
 			try {
-				final MediaInfo info = manager.loadMediaInfo(strings[0]);
+				final MediaInfo info = SPManager.getInstance().loadMediaInfo(strings[0]);
 				return info;
 			} catch (final IOException e) {
 				e.printStackTrace();

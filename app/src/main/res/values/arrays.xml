@@ -1,0 +1,9 @@
+<resources>
+    <string-array name="geolocations">
+        <item>EN</item>
+        <item>ES</item>
+        <item>DE</item>
+        <item>SE</item>
+        <item>EU</item>
+    </string-array>
+</resources>
