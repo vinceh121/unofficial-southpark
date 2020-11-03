@@ -1,18 +1,22 @@
 package me.vinceh121.unofficialsouthpark;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
+
+import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.ui.StyledPlayerControlView;
 import com.google.android.exoplayer2.ui.StyledPlayerView;
 import com.google.android.exoplayer2.util.MimeTypes;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -33,33 +37,47 @@ public class PlayerActivity extends AppCompatActivity {
 		playerView.setControllerOnFullScreenModeChangedListener(new StyledPlayerControlView.OnFullScreenModeChangedListener() {
 			@Override
 			public void onFullScreenModeChanged(final boolean isFullScreen) {
-				if (isFullScreen)
+				if (isFullScreen) {
 					playerView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE);
-				else
+				} else {
 					playerView.setSystemUiVisibility(0);
+				}
 			}
 		});
-		final MediaInfo mediaInfo = (MediaInfo) getIntent().getSerializableExtra("mediaInfo");
-
-		final Uri uri = Uri.parse(mediaInfo.getRendition().get(0).getSrc());
 
 		player = new SimpleExoPlayer.Builder(this).build();
 		playerView.setPlayer(player);
-		final MediaItem.Builder build = new MediaItem.Builder()
-				.setMimeType(MimeTypes.APPLICATION_M3U8)
-				.setUri(uri);
 
-		final List<MediaItem.Subtitle> subs = new Vector<>();
-		for (final MediaInfo.Transcript trans : mediaInfo.getTranscript()) {
-			for (final MediaInfo.Typographic typo : trans.getTypographic()) {
-				subs.add(new MediaItem.Subtitle(Uri.parse(typo.getSrc()), getSubMimetype(typo.getFormat()), trans.getKind()));
+		final ArrayList<MediaInfo> infos = (ArrayList<MediaInfo>) getIntent().getSerializableExtra("mediaInfo");
+
+		for (final MediaInfo mediaInfo : infos) {
+			Log.d("PlayerActivity", mediaInfo.toString());
+			final Uri uri = Uri.parse(mediaInfo.getRendition().get(0).getSrc());
+			final MediaItem.Builder build = new MediaItem.Builder()
+					.setMimeType(MimeTypes.APPLICATION_M3U8)
+					.setUri(uri);
+
+			if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("subtitles", true)) {
+				final List<MediaItem.Subtitle> subs = new Vector<>();
+				for (final MediaInfo.Transcript trans : mediaInfo.getTranscript()) {
+					for (final MediaInfo.Typographic typo : trans.getTypographic()) {
+						subs.add(new MediaItem.Subtitle(
+								Uri.parse(typo.getSrc()),
+								getSubMimetype(typo.getFormat()),
+								trans.getSrclang(),
+								C.SELECTION_FLAG_AUTOSELECT,
+								C.ROLE_FLAG_CAPTION,
+								trans.getKind()));
+					}
+				}
+				build.setSubtitles(subs);
 			}
+
+			final MediaItem item = build.build();
+
+			player.addMediaItem(item);
 		}
-		build.setSubtitles(subs);
 
-		final MediaItem item = build.build();
-
-		player.setMediaItem(item);
 		player.prepare();
 		player.play();
 	}
@@ -82,6 +100,8 @@ public class PlayerActivity extends AppCompatActivity {
 				return MimeTypes.APPLICATION_TTML;
 			case "vtt":
 				return MimeTypes.TEXT_VTT;
+			case "cea-608":
+				return MimeTypes.APPLICATION_CEA608;
 		}
 		return null;
 	}

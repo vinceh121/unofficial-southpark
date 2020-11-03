@@ -87,6 +87,18 @@ public class MediaInfo implements Serializable {
 		public void setRdcount(int rdcount) {
 			this.rdcount = rdcount;
 		}
+
+		@Override
+		public String toString() {
+			return "Rendition{" +
+					"src='" + src + '\'' +
+					", type='" + type + '\'' +
+					", method='" + method + '\'' +
+					", cdn='" + cdn + '\'' +
+					", duration=" + duration +
+					", rdcount=" + rdcount +
+					'}';
+		}
 	}
 
 	public static class Transcript implements Serializable {
@@ -124,6 +136,16 @@ public class MediaInfo implements Serializable {
 		public void setTypographic(final List<Typographic> typographic) {
 			this.typographic = typographic;
 		}
+
+		@Override
+		public String toString() {
+			return "Transcript{" +
+					"srclang='" + srclang + '\'' +
+					", label='" + label + '\'' +
+					", kind='" + kind + '\'' +
+					", typographic=" + typographic +
+					'}';
+		}
 	}
 
 	public static class Typographic implements Serializable {
@@ -144,5 +166,22 @@ public class MediaInfo implements Serializable {
 		public void setSrc(String src) {
 			this.src = src;
 		}
+
+		@Override
+		public String toString() {
+			return "Typographic{" +
+					"format='" + format + '\'' +
+					", src='" + src + '\'' +
+					'}';
+		}
+	}
+
+	@Override
+	public String toString() {
+		return "MediaInfo{" +
+				"originationDate='" + originationDate + '\'' +
+				", transcript=" + transcript +
+				", rendition=" + rendition +
+				'}';
 	}
 }

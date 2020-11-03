@@ -9,11 +9,13 @@
         app:useSimpleSummaryProvider="true" />
 
     <SwitchPreferenceCompat
+        app:defaultValue="false"
         app:key="episode-send"
         app:summary="Share episode links instead of opening them with the internal player"
         app:title="SEND episodes" />
 
     <SwitchPreferenceCompat
+        app:defaultValue="true"
         app:key="subtitles"
         app:summary="Only works with internal player"
         app:title="Subtitles" />
