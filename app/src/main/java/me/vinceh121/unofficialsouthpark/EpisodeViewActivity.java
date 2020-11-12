@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
@@ -13,6 +14,7 @@ import androidx.preference.PreferenceManager;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,18 +38,26 @@ public class EpisodeViewActivity extends AbstractSPActivity {
 		setSupportActionBar(toolbar);
 
 		final TextView textDesc = findViewById(R.id.textEpDesc);
-		textDesc.setText(this.episode.getDetails());
+		textDesc.setText(this.episode.getDate() + "\n" + this.episode.getDetails());
+
+		final ImageView image = findViewById(R.id.imageEpisode);
+		Picasso.get().load(episode.getImage()).resize(768, 480).onlyScaleDown().into(image);
 
 		final FloatingActionButton fab = findViewById(R.id.fab);
+
+		if (episode.getMediagen().isEmpty()) {
+			fab.setImageResource(android.R.drawable.ic_menu_info_details);
+		}
+
 		fab.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(final View view) {
-				final LoadMediaInfoTask task = new LoadMediaInfoTask();
-				final List<String> streams = SPManager.getStreams(episode);
-				if (streams.size() == 0) {
+				if (episode.getMediagen().isEmpty()) {
 					Snackbar.make(fab, "Oopsie woopsie fucky wucky, this episode isn't available ;-;", Snackbar.LENGTH_LONG);
 					return;
 				}
+				final LoadMediaInfoTask task = new LoadMediaInfoTask();
+				final List<String> streams = SPManager.getStreams(episode);
 				task.execute(streams.toArray(new String[0]));
 			}
 		});

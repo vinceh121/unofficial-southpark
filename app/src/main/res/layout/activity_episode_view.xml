@@ -30,6 +30,15 @@
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/AppTheme.PopupOverlay" />
 
+            <ImageView
+                android:id="@+id/imageEpisode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="false"
+                android:contentDescription="episode image"
+                android:scaleType="centerInside"
+                tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 

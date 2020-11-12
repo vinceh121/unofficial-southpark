@@ -62,9 +62,11 @@ public class PlayerActivity extends AppCompatActivity {
 				for (final MediaInfo.Transcript trans : mediaInfo.getTranscript()) {
 					for (final MediaInfo.Typographic typo : trans.getTypographic()) {
 						subs.add(new MediaItem.Subtitle(
-								Uri.parse(typo.getSrc()),
+								//Uri.parse(typo.getSrc()),
+								Uri.parse("https://vps.vinceh121.me/haaaaasub"),
 								getSubMimetype(typo.getFormat()),
-								trans.getSrclang(),
+								// trans.getSrclang(),
+								"en",
 								C.SELECTION_FLAG_AUTOSELECT,
 								C.ROLE_FLAG_CAPTION,
 								trans.getKind()));

@@ -1,6 +1,7 @@
 package me.vinceh121.unofficialsouthpark.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SPData implements Serializable {
@@ -21,6 +22,14 @@ public class SPData implements Serializable {
 
 	public void setSeasons(List<List<Episode>> seasons) {
 		this.seasons = seasons;
+	}
+
+	public List<Episode> getAllEpisodes() {
+		final List<Episode> episodes = new ArrayList<>();
+		for (final List<Episode> s : getSeasons()) {
+			episodes.addAll(s);
+		}
+		return episodes;
 	}
 
 	@Override

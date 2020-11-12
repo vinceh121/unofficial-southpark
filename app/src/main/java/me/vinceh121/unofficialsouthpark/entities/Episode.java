@@ -2,6 +2,7 @@ package me.vinceh121.unofficialsouthpark.entities;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.StringJoiner;
 
 public class Episode implements Serializable {
 	private String image, uuid, details, date, title, url, season, episode;
@@ -77,6 +78,15 @@ public class Episode implements Serializable {
 
 	public void setMediagen(List<String> mediagen) {
 		this.mediagen = mediagen;
+	}
+
+	public String toSearchableString() {
+		return getUuid() + " " +
+				getDetails() + " " +
+				getDate() + " " +
+				getTitle() + " " +
+				"season:" + getSeason() + " " +
+				"episode:" + getEpisode();
 	}
 
 	@Override

@@ -1,22 +1,10 @@
 package me.vinceh121.unofficialsouthpark;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -42,62 +30,7 @@ public class EpisodesActivity extends AbstractSPActivity {
 		this.layoutManager = new LinearLayoutManager(this);
 		this.recycler.setLayoutManager(this.layoutManager);
 
-		final EpisodeAdapter adapter = new EpisodeAdapter(season);
+		final EpisodeAdapter adapter = new EpisodeAdapter(season, this);
 		this.recycler.setAdapter(adapter);
-	}
-
-	private class EpisodeAdapter extends RecyclerView.Adapter<EpisodeAdapter.ViewHolder> {
-		private final List<Episode> season;
-
-		private class ViewHolder extends RecyclerView.ViewHolder {
-			private final View v;
-
-			public ViewHolder(final View v) {
-				super(v);
-				this.v = v;
-			}
-		}
-
-		public EpisodeAdapter(final List<Episode> season) {
-			this.season = season;
-		}
-
-		@NonNull
-		@Override
-		public ViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, final int viewType) {
-			final View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_episode_view, parent, false);
-			v.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(final View v) {
-					final Intent intent = new Intent(EpisodesActivity.this, EpisodeViewActivity.class);
-					final Episode s = season.get(recycler.getChildLayoutPosition(v));
-					intent.putExtra("episode", s);
-					startActivity(intent);
-				}
-			});
-
-			final ViewHolder vh = new ViewHolder(v);
-			return vh;
-		}
-
-		@Override
-		public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
-			final Episode episode = season.get(position);
-
-			final TextView title = holder.v.findViewById(R.id.textTitle);
-			final TextView epCount = holder.v.findViewById(R.id.textEpDesc);
-			final ImageView img = holder.v.findViewById(R.id.imageEpisode);
-
-			title.setText(episode.getTitle());
-			epCount.setText(episode.getDetails());
-			Picasso.get().load(episode.getImage()).resize(768, 480).onlyScaleDown().into(img);
-		}
-
-		@Override
-		public int getItemCount() {
-			if (season == null)
-				return 0;
-			return season.size();
-		}
 	}
 }

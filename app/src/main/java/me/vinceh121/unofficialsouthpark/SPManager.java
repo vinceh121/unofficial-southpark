@@ -64,7 +64,7 @@ public class SPManager {
 			public MediaInfo handleResponse(ClassicHttpResponse response) throws HttpException, IOException {
 				final JsonNode node = mapper.readTree(response.getEntity().getContent());
 				final JsonNode nodeInfo = node.at("/package/video/item/0"); // TODO maybe have better control over tree traversal
-				Log.d("SPManager", "nodeInfo: " + nodeInfo);
+				Log.d("SPManager", "nodeInfo: " + nodeInfo); // TODO error handling: D/SPManager: nodeInfo: {"type":"text","code":"not_found","text":"Sorry, this video is not found or no longer available due to date or rights restrictions."}
 				return mapper.convertValue(nodeInfo, MediaInfo.class);
 			}
 		});
