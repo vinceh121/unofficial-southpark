@@ -27,6 +27,9 @@ public abstract class AbstractSPActivity extends AppCompatActivity {
 			case R.id.app_bar_search:
 				startActivity(new Intent(this, EpisodeSearch.class));
 				return true;
+			case R.id.action_about:
+				startActivity(new Intent(this, AboutActivity.class));
+				return true;
 		}
 		return false;
 	}
