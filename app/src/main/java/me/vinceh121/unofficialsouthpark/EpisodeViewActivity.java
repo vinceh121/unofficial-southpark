@@ -10,11 +10,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ShareCompat;
+import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.preference.PreferenceManager;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -98,9 +101,18 @@ public class EpisodeViewActivity extends AbstractSPActivity {
 
     private class LoadMediaInfoTask extends AsyncTask<String, Void, ArrayList<MediaInfo>> {
         private final LoadMode loadMode;
+        private AlertDialog dialog;
+        private ProgressBar progressBar;
 
         public LoadMediaInfoTask(LoadMode loadMode) {
             this.loadMode = loadMode;
+            this.progressBar = new ProgressBar(EpisodeViewActivity.this);
+            this.progressBar.setIndeterminate(false);
+            this.dialog = new AlertDialog.Builder(EpisodeViewActivity.this)
+                    .setCancelable(false)
+                    .setMessage("Loading episode")
+                    .setView(this.progressBar)
+                    .show();
         }
 
         @Override
@@ -110,10 +122,14 @@ public class EpisodeViewActivity extends AbstractSPActivity {
                 try {
                     final MediaInfo info = SPManager.getInstance().loadMediaInfo(s);
                     infos.add(info);
+                    this.dialog.setMessage("Loading episode " + infos.size() + "/" + strings.length);
+                    this.progressBar.setMax(strings.length);
+                    this.progressBar.setProgress(infos.size());
                 } catch (final IOException e) {
                     e.printStackTrace();
                 }
             }
+            this.dialog.cancel();
             return infos;
         }
 
