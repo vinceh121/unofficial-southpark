@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="me.vinceh121.unofficialsouthpark.EpisodeViewActivity" >
+    <item
+        android:id="@+id/action_share_link"
+        android:icon="@drawable/ic_baseline_share_24"
+        android:title="Share"
+        android:orderInCategory="50"
+        app:showAsAction="ifRoom" />
+</menu>
