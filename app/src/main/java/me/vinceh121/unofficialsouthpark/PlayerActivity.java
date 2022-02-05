@@ -51,28 +51,22 @@ public class PlayerActivity extends AppCompatActivity {
 		final ArrayList<MediaInfo> infos = (ArrayList<MediaInfo>) getIntent().getSerializableExtra("mediaInfo");
 
 		for (final MediaInfo mediaInfo : infos) {
-			Log.d("PlayerActivity", mediaInfo.toString());
 			final Uri uri = Uri.parse(mediaInfo.getRendition().get(0).getSrc());
 			final MediaItem.Builder build = new MediaItem.Builder()
 					.setMimeType(MimeTypes.APPLICATION_M3U8)
 					.setUri(uri);
 
 			if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("subtitles", true)) {
-				final List<MediaItem.Subtitle> subs = new Vector<>();
+				final List<MediaItem.SubtitleConfiguration> subs = new Vector<>();
 				for (final MediaInfo.Transcript trans : mediaInfo.getTranscript()) {
 					for (final MediaInfo.Typographic typo : trans.getTypographic()) {
-						subs.add(new MediaItem.Subtitle(
-								//Uri.parse(typo.getSrc()),
-								Uri.parse("https://vps.vinceh121.me/haaaaasub"),
-								getSubMimetype(typo.getFormat()),
-								// trans.getSrclang(),
-								"en",
-								C.SELECTION_FLAG_AUTOSELECT,
-								C.ROLE_FLAG_CAPTION,
-								trans.getKind()));
+						subs.add(new MediaItem.SubtitleConfiguration.Builder(Uri.parse(typo.getSrc()))
+								.setSelectionFlags(C.SELECTION_FLAG_FORCED)
+								.setMimeType(getSubMimetype(typo.getFormat()))
+								.build());
 					}
 				}
-				build.setSubtitles(subs);
+				build.setSubtitleConfigurations(subs);
 			}
 
 			final MediaItem item = build.build();

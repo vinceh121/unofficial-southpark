@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 31
     buildToolsVersion "29.0.2"
 
     defaultConfig {
         applicationId "me.vinceh121.unofficialsouthpark"
         minSdkVersion 16
-        targetSdkVersion 29
+        targetSdkVersion 31
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
@@ -44,7 +44,7 @@ dependencies {
     implementation 'org.apache.httpcomponents.client5:httpclient5:5.0.3'
     implementation 'com.squareup.picasso:picasso:2.71828'
 
-    implementation 'com.google.android.exoplayer:exoplayer:2.12.1'
+    implementation 'com.google.android.exoplayer:exoplayer:2.16.1'
     /*implementation 'com.google.android.exoplayer:exoplayer-core:2.12.1'
     implementation 'com.google.android.exoplayer:exoplayer-hls:2.12.1'
     implementation 'com.google.android.exoplayer:exoplayer-ui:2.12.1'
